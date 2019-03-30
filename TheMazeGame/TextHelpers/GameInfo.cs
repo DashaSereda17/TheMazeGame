@@ -6,6 +6,7 @@ namespace TheMazeGame.TextHelpers
     class GameInfo
     {
         private StringBuilder textInfo;
+        public string PlayerName { private get; set; }
 
         public GameInfo()
         {
@@ -14,12 +15,17 @@ namespace TheMazeGame.TextHelpers
 
         public StringBuilder GetFinalResult(int coins, int lifePoints, int keys, int steps)
         {
+            textInfo.Clear();
             textInfo.AppendLine(new String('*', 35));
             textInfo.AppendLine("*         Congratulation!         *");
             textInfo.AppendLine("*          You have won!          *");
             textInfo.AppendLine(new String('*', 35));
             textInfo.AppendLine();
             textInfo.AppendLine("Game information: ");
+            if (!String.IsNullOrEmpty(PlayerName))
+            {
+                textInfo.AppendLine($"Player name: {PlayerName}");
+            }
             textInfo.AppendLine($"Coins: {coins}");
             textInfo.AppendLine($"Life points: {lifePoints}");
             textInfo.AppendLine($"Keys: {keys}");
@@ -30,9 +36,27 @@ namespace TheMazeGame.TextHelpers
 
         public StringBuilder GetExitInfo()
         {
+            textInfo.Clear();
             textInfo.AppendLine(new String('*', 35));
-            textInfo.AppendLine("*         See you later!          *");
-            textInfo.AppendLine("*              Bye!               *");
+            if (!String.IsNullOrEmpty(PlayerName))
+            {
+                textInfo.AppendLine($"{PlayerName}, see you later!");
+            }
+            else
+            {
+                textInfo.AppendLine("*         See you later!          *");
+            }
+            textInfo.AppendLine(new String('*', 35));
+
+            return textInfo;
+        }
+
+        public StringBuilder GetLoseInfo()
+        {
+            textInfo.Clear();
+            textInfo.AppendLine(new String('*', 35));
+            textInfo.AppendLine("*         Unfortunately          *");
+            textInfo.AppendLine("* Your life points have run out! *");
             textInfo.AppendLine(new String('*', 35));
 
             return textInfo;
@@ -40,18 +64,21 @@ namespace TheMazeGame.TextHelpers
 
         public StringBuilder GetGameMenu()
         {
-            textInfo.AppendLine(new String('*', 35));
-            textInfo.AppendLine("*              Play                *");
-            textInfo.AppendLine("*         Set player name          *");
-            textInfo.AppendLine("*           Instruction            *");
-            textInfo.AppendLine("*              Exit                *");
-            textInfo.AppendLine(new String('*', 35));
+            textInfo.Clear();
+            textInfo.AppendLine(new String('*', 25));
+            textInfo.AppendLine("*         MENU          *");
+            textInfo.AppendLine("*  Play             - 0 *");
+            textInfo.AppendLine("*  Set player name  - 1 *");
+            textInfo.AppendLine("*  Instruction      - 2 *");
+            textInfo.AppendLine("*  Exit             - 3 *");
+            textInfo.AppendLine(new String('*', 25));
 
             return textInfo;
         }
 
         public StringBuilder GetInstruction()
         {
+            textInfo.Clear();
             textInfo.AppendLine(new String('*', 35));
             textInfo.AppendLine("Controls: ");
             textInfo.AppendLine("To move just use keys UP, DOWN, LEFT, RIGHT");

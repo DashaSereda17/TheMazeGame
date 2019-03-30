@@ -32,14 +32,14 @@ namespace TheMazeGame.Models
         public void DrawPlayer()
         {
             Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Blue;
-            Console.Write('0');
+            Console.BackgroundColor = ConsoleColor.DarkCyan;
+            Console.Write('@');
         }
 
         public void DrawRoute()
         {
             Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.Red;
             Console.Write(' ');
         }
     }
