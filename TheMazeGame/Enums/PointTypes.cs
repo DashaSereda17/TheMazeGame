@@ -6,7 +6,6 @@
         ClosedDoor,
         OpenedDoor,
         Route,
-        Player,
         Coin,
         Key,
         Trap

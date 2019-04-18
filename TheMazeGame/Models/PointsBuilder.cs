@@ -1,25 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using TheMazeGame.Enums;
 
 namespace TheMazeGame.Models
 {
+    [DataContract]
     public class PointsBuilder
     {
+        [NonSerialized]
         private int rowNumber = Configuration.ROW_NUMBER;
+
+        [NonSerialized]
         private int columnNumber = Configuration.COLUMN_NUMBER;
 
-        private Point[,] Points;
+        public Point[,] Points { get; private set; }
+
+        [DataMember]
+        private Point[][] pointsToSave { get; set; }
 
         public PointsBuilder()
         {
             Points = new Point[rowNumber, columnNumber];
             Build();
-        }
-
-        public Point[,] GetPoints()
-        {
-            return Points;
         }
 
         public void Build()
@@ -28,7 +34,6 @@ namespace TheMazeGame.Models
             BuildRoute();
             BuildClosedDoors();
             BuildOpenedDoor();
-            BuildPlayer();
             BuildCoins();
             BuildTraps();
             BuildKeys();
@@ -55,7 +60,7 @@ namespace TheMazeGame.Models
         private void BuildRoute()
         {
             var routePoints = new List<RoutePoint>();
-
+            routePoints.Add(new RoutePoint() { RowIndex = 0, ColumnIndex = 0 });
             routePoints.Add(new RoutePoint() { RowIndex = 0, ColumnIndex = 3 });
             routePoints.Add(new RoutePoint() { RowIndex = 0, ColumnIndex = 4 });
             routePoints.Add(new RoutePoint() { RowIndex = 0, ColumnIndex = 5 });
@@ -208,14 +213,6 @@ namespace TheMazeGame.Models
             Points[19, 17].Symbol = 'E';
         }
 
-        private void BuildPlayer()
-        {
-            Points[0, 0].ColorBackground = ConsoleColor.Blue;
-            Points[0, 0].ColorForground = ConsoleColor.White;
-            Points[0, 0].PointType = PointTypes.Player;
-            Points[0, 0].Symbol = '@';
-        }
-
         private void BuildKeys()
         {
             var routePoints = new List<RoutePoint>();
@@ -227,7 +224,6 @@ namespace TheMazeGame.Models
             foreach (var routePoint in routePoints)
             {
                 Points[routePoint.RowIndex, routePoint.ColumnIndex].ColorBackground = ConsoleColor.Red;
-                Points[routePoint.RowIndex, routePoint.ColumnIndex].ColorForground = ConsoleColor.Cyan;
                 Points[routePoint.RowIndex, routePoint.ColumnIndex].ColorForground = ConsoleColor.Cyan;
                 Points[routePoint.RowIndex, routePoint.ColumnIndex].PointType = PointTypes.Key;
                 Points[routePoint.RowIndex, routePoint.ColumnIndex].IsActive = true;
@@ -389,5 +385,84 @@ namespace TheMazeGame.Models
             public int RowIndex { get; set; }
             public int ColumnIndex { get; set; }
         }
+
+        private void ConvertPointsToArrayToArrays()
+        {
+            pointsToSave = new Point[Configuration.ROW_NUMBER][];
+            for (int i = 0; i < Configuration.ROW_NUMBER; i++)
+            {
+                pointsToSave[i] = new Point[Configuration.COLUMN_NUMBER];
+                for (int j = 0; j < Configuration.COLUMN_NUMBER; j++)
+                {
+                    pointsToSave[i][j] = Points[i, j];
+                }
+            }
+        }
+
+        private void ConvertPointsToMultidimensionalArray()
+        {
+            Points = new Point[Configuration.ROW_NUMBER, Configuration.COLUMN_NUMBER];
+
+            for (int i = 0; i < Configuration.ROW_NUMBER; i++)
+            {
+                for (int j = 0; j < Configuration.COLUMN_NUMBER; j++)
+                {
+                    Points[i, j] = pointsToSave[i][j];
+                }
+            }
+        }
+
+        public void Save()
+        {
+            ConvertPointsToArrayToArrays();
+            var serializer = new DataContractJsonSerializer(typeof(PointsBuilder));
+            var path = $"{Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory)}Points.json";
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+
+            using (var stream = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                serializer.WriteObject(stream, (object)this);
+            }
+        }
+
+        public bool Load()
+        {
+            var result = true;
+            var serializer = new DataContractJsonSerializer(typeof(PointsBuilder));
+            var path = $"{Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory)}Points.json";
+
+            if (!File.Exists(path))
+            {
+                return false;
+            }
+
+            using (var stream = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                if (stream.Length > 0)
+                {
+                    var pointsObject = serializer.ReadObject(stream);
+                    if (pointsObject != null)
+                    {
+                        var pointsBuilder = (PointsBuilder)pointsObject;
+                        pointsToSave = pointsBuilder.pointsToSave;
+
+                        if (pointsToSave != null && pointsToSave.Any())
+                        {
+                            ConvertPointsToMultidimensionalArray();
+                        }
+                    }
+                }
+                else
+                {
+                    result = false;
+                }
+            }
+
+            return result;
+        }
     }
 }
+

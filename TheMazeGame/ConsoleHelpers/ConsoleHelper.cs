@@ -26,14 +26,18 @@ namespace TheMazeGame.ConsoleHelpers
                         isRightKey = true;
                         break;
                     case "1":
-                        choosedMenuItem = MenuItemType.EditPlayer;
+                        choosedMenuItem = MenuItemType.LoadGame;
                         isRightKey = true;
                         break;
                     case "2":
-                        choosedMenuItem = MenuItemType.Information;
+                        choosedMenuItem = MenuItemType.EditPlayer;
                         isRightKey = true;
                         break;
                     case "3":
+                        choosedMenuItem = MenuItemType.Information;
+                        isRightKey = true;
+                        break;
+                    case "4":
                         choosedMenuItem = MenuItemType.Exit;
                         isRightKey = true;
                         break;

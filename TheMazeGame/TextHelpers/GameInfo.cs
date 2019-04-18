@@ -13,7 +13,7 @@ namespace TheMazeGame.TextHelpers
             textInfo = new StringBuilder();
         }
 
-        public StringBuilder GetFinalResult(int coins, int lifePoints, int keys, int steps)
+        public StringBuilder GetFinalResult(int coins, int lifePoints, int keys, int steps, int timeInSeconds)
         {
             textInfo.Clear();
             textInfo.AppendLine(new String('*', 35));
@@ -30,6 +30,7 @@ namespace TheMazeGame.TextHelpers
             textInfo.AppendLine($"Life points: {lifePoints}");
             textInfo.AppendLine($"Keys: {keys}");
             textInfo.AppendLine($"Steps: {steps}");
+            textInfo.AppendLine($"Time: {timeInSeconds} sec");
 
             return textInfo;
         }
@@ -51,12 +52,14 @@ namespace TheMazeGame.TextHelpers
             return textInfo;
         }
 
-        public StringBuilder GetLoseInfo()
+        public StringBuilder GetLoseInfo(int timeInSeconds)
         {
             textInfo.Clear();
             textInfo.AppendLine(new String('*', 35));
             textInfo.AppendLine("*         Unfortunately          *");
             textInfo.AppendLine("* Your life points have run out! *");
+            textInfo.AppendLine(new String('*', 35));
+            textInfo.AppendLine($"Time: {timeInSeconds} sec");
             textInfo.AppendLine(new String('*', 35));
 
             return textInfo;
@@ -68,9 +71,10 @@ namespace TheMazeGame.TextHelpers
             textInfo.AppendLine(new String('*', 25));
             textInfo.AppendLine("*         MENU          *");
             textInfo.AppendLine("*  Play             - 0 *");
-            textInfo.AppendLine("*  Set player name  - 1 *");
-            textInfo.AppendLine("*  Instruction      - 2 *");
-            textInfo.AppendLine("*  Exit             - 3 *");
+            textInfo.AppendLine("*  Load saved game  - 1 *");
+            textInfo.AppendLine("*  Set player name  - 2 *");
+            textInfo.AppendLine("*  Instruction      - 3 *");
+            textInfo.AppendLine("*  Exit             - 4 *");
             textInfo.AppendLine(new String('*', 25));
 
             return textInfo;
