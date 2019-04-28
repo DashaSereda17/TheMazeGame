@@ -2,15 +2,15 @@
 using TheMazeGame.ConsoleHelpers;
 using TheMazeGame.Enums;
 using TheMazeGame.Models;
+using TheMazeGame.Models.GameObjects;
 using TheMazeGame.TextHelpers;
 
-namespace TheMaze
+namespace TheMazeGame
 {
     class Program
     {
-        public static Player PlayerInfo { get; set; }
-        public static PointsChecker PointsChecker { get; set; }
-        public static PointsBuilder PointsBuilder { get; set; }
+        public static GameObject PlayerInfo { get; set; }
+        public static GameField GameField { get; set; }
         public static Drawer Drawer { get; set; }
         public static GameInfo GameInfo { get; set; }
         public static TypeFinishGame TypeFinishGame { get; set; }
@@ -30,9 +30,8 @@ namespace TheMaze
             Console.Title = Configuration.TITLE;
 
             PlayerInfo = new Player();
-            PointsBuilder = new PointsBuilder();
-            Drawer = new Drawer(PointsBuilder.Points);
-            PointsChecker = new PointsChecker(PointsBuilder.Points);
+            GameField = new GameField();
+            Drawer = new Drawer(GameField.Cells);
             GameInfo = new GameInfo();
             ConsoleHelper = new ConsoleHelper();
         }
@@ -50,14 +49,14 @@ namespace TheMaze
                         isNeedRepeatMenu = false;
                         Drawer.SetPlayer(PlayerInfo);
                         Drawer.Draw();
-                        ConsoleHelper.ShowPlayerLifePoints(PlayerInfo.CountLifePoints, Player.MAX_LIFE_POINTS);
+                        ConsoleHelper.ShowPlayerLifePoints((PlayerInfo as Player).CountLifePoints, Player.MAX_LIFE_POINTS);
                         Console.SetCursorPosition(PlayerInfo.PositionLeft, PlayerInfo.PositionTop);
-                        PlayerInfo.StarTime = DateTime.Now;
+                        (PlayerInfo as Player).StarTime = DateTime.Now;
                         MovementHandler();
                         ShowGameInfo();
                         break;
                     case MenuItemType.LoadGame:
-                        if (!PlayerInfo.Load() | !PointsBuilder.Load())
+                        if (!(PlayerInfo as Player).Load() | !GameField.Load())
                         {
                             Console.WriteLine("The version of last saved game is not available");
                             Console.ReadLine();
@@ -65,10 +64,10 @@ namespace TheMaze
                         else
                         {
                             isNeedRepeatMenu = false;
-                            Drawer.SetPoints(PointsBuilder.Points);
+                            Drawer.SetPoints(GameField.Cells);
                             Drawer.SetPlayer(PlayerInfo);
                             Drawer.Draw();
-                            ConsoleHelper.ShowPlayerLifePoints(PlayerInfo.CountLifePoints, Player.MAX_LIFE_POINTS);
+                            ConsoleHelper.ShowPlayerLifePoints((PlayerInfo as Player).CountLifePoints, Player.MAX_LIFE_POINTS);
                             Console.SetCursorPosition(PlayerInfo.PositionLeft, PlayerInfo.PositionTop);
                             MovementHandler();
                             ShowGameInfo();
@@ -76,9 +75,9 @@ namespace TheMaze
                         break;
                     case MenuItemType.EditPlayer:
                         Console.WriteLine("Write your name:");
-                        PlayerInfo.PlayerName = Console.ReadLine();
-                        ConsoleHelper.PlayerName = PlayerInfo.PlayerName;
-                        GameInfo.PlayerName = PlayerInfo.PlayerName;
+                        (PlayerInfo as Player).PlayerName = Console.ReadLine();
+                        ConsoleHelper.PlayerName = (PlayerInfo as Player).PlayerName;
+                        GameInfo.PlayerName = (PlayerInfo as Player).PlayerName;
                         break;
                     case MenuItemType.Information:
                         Console.WriteLine(GameInfo.GetInstruction());
@@ -95,7 +94,7 @@ namespace TheMaze
         static void MovementHandler()
         {
             var isExit = false;
-            var nextPointType = PointTypes.Route;
+            var nextPointType = FieldTypes.Route;
             var isNextStepDone = false;
             while (!isExit)
             {
@@ -110,18 +109,18 @@ namespace TheMaze
                             Console.CursorLeft -= 1;
                             if (Console.CursorTop < Configuration.ROW_NUMBER - 1)
                             {
-                                nextPointType = PointsChecker.GetPointType(Console.CursorTop + 1, Console.CursorLeft);
+                                nextPointType = (GameField[Console.CursorTop + 1, Console.CursorLeft] as Cell).FieldType;
                                 var canDoNextStep = NextStepHandler(nextPointType, Console.CursorTop + 1, Console.CursorLeft);
                                 if (canDoNextStep)
                                 {
                                     Console.CursorTop++;
-                                    PlayerInfo.SetPosition(Console.CursorTop, Console.CursorLeft);
+                                    (PlayerInfo as Player).SetPosition(Console.CursorTop, Console.CursorLeft);
                                     isNextStepDone = true;
                                 }
                             }
                             Drawer.DrawPlayer();
                             Console.CursorLeft -= 1;
-                            PlayerInfo.IncreaseSteps();
+                            (PlayerInfo as Player).IncreaseSteps();
 
                             break;
                         }
@@ -132,17 +131,17 @@ namespace TheMaze
                             Console.CursorLeft -= 1;
                             if (Console.CursorTop > 0)
                             {
-                                nextPointType = PointsChecker.GetPointType(Console.CursorTop - 1, Console.CursorLeft);
+                                nextPointType = (GameField[Console.CursorTop - 1, Console.CursorLeft] as Cell).FieldType;
                                 if (NextStepHandler(nextPointType, Console.CursorTop - 1, Console.CursorLeft))
                                 {
                                     Console.CursorTop--;
-                                    PlayerInfo.SetPosition(Console.CursorTop, Console.CursorLeft);
+                                    (PlayerInfo as Player).SetPosition(Console.CursorTop, Console.CursorLeft);
                                     isNextStepDone = true;
                                 }
                             }
                             Drawer.DrawPlayer();
                             Console.CursorLeft -= 1;
-                            PlayerInfo.IncreaseSteps();
+                            (PlayerInfo as Player).IncreaseSteps();
                             break;
                         }
                     case ConsoleKey.LeftArrow:
@@ -152,17 +151,17 @@ namespace TheMaze
                             Console.CursorLeft -= 1;
                             if (Console.CursorLeft > 0)
                             {
-                                nextPointType = PointsChecker.GetPointType(Console.CursorTop, Console.CursorLeft - 1);
+                                nextPointType = (GameField[Console.CursorTop, Console.CursorLeft - 1] as Cell).FieldType;
                                 if (NextStepHandler(nextPointType, Console.CursorTop, Console.CursorLeft - 1))
                                 {
                                     Console.CursorLeft--;
-                                    PlayerInfo.SetPosition(Console.CursorTop, Console.CursorLeft);
+                                    (PlayerInfo as Player).SetPosition(Console.CursorTop, Console.CursorLeft);
                                     isNextStepDone = true;
                                 }
                             }
                             Drawer.DrawPlayer();
                             Console.CursorLeft -= 1;
-                            PlayerInfo.IncreaseSteps();
+                            (PlayerInfo as Player).IncreaseSteps();
                             break;
                         }
                     case ConsoleKey.RightArrow:
@@ -172,18 +171,18 @@ namespace TheMaze
                             Console.CursorLeft -= 1;
                             if (Console.CursorLeft < Configuration.COLUMN_NUMBER - 1)
                             {
-                                nextPointType = PointsChecker.GetPointType(Console.CursorTop, Console.CursorLeft + 1);
+                                nextPointType = (GameField[Console.CursorTop, Console.CursorLeft + 1] as Cell).FieldType;
                                 if (NextStepHandler(nextPointType, Console.CursorTop, Console.CursorLeft + 1))
                                 {
                                     Console.CursorLeft++;
-                                    PlayerInfo.SetPosition(Console.CursorTop, Console.CursorLeft);
+                                    (PlayerInfo as Player).SetPosition(Console.CursorTop, Console.CursorLeft);
                                     isNextStepDone = true;
                                 }
 
                             }
                             Drawer.DrawPlayer();
                             Console.CursorLeft -= 1;
-                            PlayerInfo.IncreaseSteps();
+                            (PlayerInfo as Player).IncreaseSteps();
                             break;
                         }
                     case ConsoleKey.Escape:
@@ -210,62 +209,115 @@ namespace TheMaze
                 }
 
                 if (isNextStepDone &&
-                    (nextPointType == PointTypes.OpenedDoor || nextPointType == PointTypes.ClosedDoor))
+                    (nextPointType == FieldTypes.OpenedDoor || nextPointType == FieldTypes.ClosedDoor))
                 {
                     TypeFinishGame = TypeFinishGame.Won;
                     isExit = true;
                 }
-                else if (isNextStepDone && nextPointType == PointTypes.Trap && PlayerInfo.CountLifePoints == 0)
+                else if (isNextStepDone && (nextPointType == FieldTypes.Trap || nextPointType == FieldTypes.DeadlyTrap)
+                                        && (PlayerInfo as Player).CountLifePoints == 0)
                 {
                     TypeFinishGame = TypeFinishGame.Lost;
                     isExit = true;
+                }
+                else if (isNextStepDone && nextPointType == FieldTypes.Portal
+                                        && GameField[Console.CursorTop, Console.CursorLeft].IsActive)
+                {
+                    GameField[Console.CursorTop, Console.CursorLeft].IsActive = false;
+                    var random = new Random();
+                    while (true)
+                    {
+                        var row = random.Next(0, Configuration.COLUMN_NUMBER - 1);
+                        var column = random.Next(0, Configuration.COLUMN_NUMBER - 1);
+                        if ((GameField[row, column] as Cell).FieldType == FieldTypes.Route)
+                        {
+                            Drawer.DrawRoute();
+                            Console.CursorLeft -= 1;
+
+                            Console.SetCursorPosition(column, row);
+                            (PlayerInfo as Player).SetPosition(row, column);
+
+                            Drawer.DrawPlayer();
+                            Console.CursorLeft -= 1;
+                            break;
+                        }
+
+                    }
                 }
             }
         }
 
         private static void SaveGame()
         {
-            PointsBuilder.Save();
-            PlayerInfo.Save();
+            GameField.Save();
+            (PlayerInfo as Player).Save();
         }
 
-        static bool NextStepHandler(PointTypes pointType, int nextRowPosition, int nextColumnPosition)
+        static bool NextStepHandler(FieldTypes fieldTypes, int nextRowPosition, int nextColumnPosition)
         {
             var result = true;
-            var points = PointsBuilder.Points;
-            switch (pointType)
+            var points = GameField.Cells;
+            switch (fieldTypes)
             {
-                case PointTypes.Wall:
+                case FieldTypes.OpenedDoor:
+                    if ((PlayerInfo as Player).CountCoins < Configuration.POINTS_TO_EXIT
+                        || (PlayerInfo as Player).CountSteps > Configuration.STEPS_TO_CLOSE_DOOR)
+                    {
+                        result = false;
+                    }
+
+                    break;
+                case FieldTypes.Wall:
                     result = false;
                     break;
-                case PointTypes.ClosedDoor:
-                    result = PlayerInfo.CountKeys > 0;
+                case FieldTypes.ClosedDoor:
+                    result = (PlayerInfo as Player).CountKeys > 0;
                     break;
-                case PointTypes.Coin:
+                case FieldTypes.Coin:
                     if (points[nextRowPosition, nextColumnPosition].IsActive)
                     {
-                        PlayerInfo.IncreaseCoins();
-                        points[nextRowPosition, nextColumnPosition].IsActive = false;
-                    }
-                    break;
-                case PointTypes.Key:
-                    if (points[nextRowPosition, nextColumnPosition].IsActive)
-                    {
-                        PlayerInfo.IncreaseKeys();
+                        (PlayerInfo as Player).IncreaseCoins();
                         points[nextRowPosition, nextColumnPosition].IsActive = false;
                     }
 
                     break;
-                case PointTypes.Trap:
+                case FieldTypes.Key:
                     if (points[nextRowPosition, nextColumnPosition].IsActive)
                     {
-                        PlayerInfo.DecreaseLifePoints();
+                        (PlayerInfo as Player).IncreaseKeys();
+                        points[nextRowPosition, nextColumnPosition].IsActive = false;
+                    }
+
+                    break;
+                case FieldTypes.Trap:
+                    if (points[nextRowPosition, nextColumnPosition].IsActive)
+                    {
+                        (PlayerInfo as Player).DecreaseLifePoints();
                         points[nextRowPosition, nextColumnPosition].IsActive = false;
                         var currentRow = Console.CursorTop;
                         var currentColumn = Console.CursorLeft;
-                        ConsoleHelper.ShowPlayerLifePoints(PlayerInfo.CountLifePoints, Player.MAX_LIFE_POINTS);
+                        ConsoleHelper.ShowPlayerLifePoints((PlayerInfo as Player).CountLifePoints,
+                            Player.MAX_LIFE_POINTS);
                         Console.SetCursorPosition(currentColumn, currentRow);
                     }
+
+                    break;
+                case FieldTypes.DeadlyTrap:
+                    if (points[nextRowPosition, nextColumnPosition].IsActive)
+                    {
+                        for (int i = 0; i < Player.MAX_LIFE_POINTS; i++)
+                        {
+                            (PlayerInfo as Player).DecreaseLifePoints();
+                        }
+
+                        points[nextRowPosition, nextColumnPosition].IsActive = false;
+                        var currentRow = Console.CursorTop;
+                        var currentColumn = Console.CursorLeft;
+                        ConsoleHelper.ShowPlayerLifePoints((PlayerInfo as Player).CountLifePoints,
+                            Player.MAX_LIFE_POINTS);
+                        Console.SetCursorPosition(currentColumn, currentRow);
+                    }
+
                     break;
             }
 
@@ -278,13 +330,13 @@ namespace TheMaze
             {
                 case TypeFinishGame.Won:
                     Console.Clear();
-                    var time = (int)(DateTime.Now - PlayerInfo.StarTime).TotalSeconds;
-                    Console.WriteLine(GameInfo.GetFinalResult(PlayerInfo.CountCoins,
-                        PlayerInfo.CountLifePoints, PlayerInfo.CountKeys, PlayerInfo.CountSteps, time));
+                    var time = (int)(DateTime.Now - (PlayerInfo as Player).StarTime).TotalSeconds;
+                    Console.WriteLine(GameInfo.GetFinalResult((PlayerInfo as Player).CountCoins,
+                        (PlayerInfo as Player).CountLifePoints, (PlayerInfo as Player).CountKeys, (PlayerInfo as Player).CountSteps, time));
                     break;
                 case TypeFinishGame.Lost:
                     Console.Clear();
-                    Console.WriteLine(GameInfo.GetLoseInfo((int)(DateTime.Now - PlayerInfo.StarTime).TotalSeconds));
+                    Console.WriteLine(GameInfo.GetLoseInfo((int)(DateTime.Now - (PlayerInfo as Player).StarTime).TotalSeconds));
                     break;
                 case TypeFinishGame.Exit:
                     Console.Clear();
