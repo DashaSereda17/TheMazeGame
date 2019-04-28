@@ -1,6 +1,6 @@
 ﻿namespace TheMazeGame.Enums
 {
-    public enum PointTypes
+    public enum FieldTypes
     {
         Wall,
         ClosedDoor,
@@ -8,6 +8,8 @@
         Route,
         Coin,
         Key,
-        Trap
+        Trap,
+        DeadlyTrap,
+        Portal
     }
 }
