@@ -2,13 +2,11 @@
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-using TheMazeGame.Interfaces;
 
-namespace TheMazeGame.Models.GameObjects
+namespace TheMazeGame.Models
 {
-    [KnownType(typeof(GameObject))]
     [DataContract]
-    public class Player : GameObject, IGameSerialization
+    public class Player
     {
         public const int MAX_LIFE_POINTS = 3;
 
@@ -23,6 +21,10 @@ namespace TheMazeGame.Models.GameObjects
         [DataMember]
         public string PlayerName { get; set; }
         [DataMember]
+        public int PositionTop { get; private set; }
+        [DataMember]
+        public int PositionLeft { get; private set; }
+        [DataMember]
         public DateTime StarTime { get; set; }
 
         public Player()
@@ -32,9 +34,6 @@ namespace TheMazeGame.Models.GameObjects
             CountCoins = 0;
             PositionTop = 0;
             PositionLeft = 0;
-            ColorForeground = ConsoleColor.White;
-            ColorBackground = ConsoleColor.Blue;
-            Symbol = '@';
         }
 
         public void IncreaseLifePoints()

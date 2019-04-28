@@ -1,40 +1,38 @@
 ﻿using System;
-using TheMazeGame.Models.GameObjects;
 
 namespace TheMazeGame.Models
 {
     public class Drawer
     {
-        private GameObject[,] _cells;
-        private GameObject _player;
+        private Point[,] points;
+        private Player player;
 
-        public Drawer(GameObject[,] cells)
+        public Drawer(Point[,] points)
         {
-            _cells = cells;
+            this.points = points;
         }
 
-        public void SetPoints(GameObject[,] cells)
+        public void SetPoints(Point[,] points)
         {
-            _cells = cells;
+            this.points = points;
         }
 
-        public void SetPlayer(GameObject player)
+        public void SetPlayer(Player player)
         {
-            _player = player;
+            this.player = player;
         }
 
         public void Draw()
         {
-            for (var i = 0; i < _cells.GetLength(0); i++)
+            for (var i = 0; i < points.GetLength(0); i++)
             {
-                for (int j = 0; j < _cells.GetLength(1); j++)
+                for (int j = 0; j < points.GetLength(1); j++)
                 {
-                    Console.ResetColor();
-                    if (_cells[i, j].IsActive)
+                    Console.ForegroundColor = points[i, j].ColorForground;
+                    Console.BackgroundColor = points[i, j].ColorBackground;
+                    if (points[i, j].IsActive)
                     {
-                        Console.ForegroundColor = _cells[i, j].ColorForeground;
-                        Console.BackgroundColor = _cells[i, j].ColorBackground;
-                        Console.Write(_cells[i, j].Symbol);
+                        Console.Write(points[i, j].Symbol);
                     }
                     else
                     {
@@ -45,29 +43,25 @@ namespace TheMazeGame.Models
                 Console.WriteLine();
             }
 
-            Console.SetCursorPosition(_player.PositionLeft, _player.PositionTop);
+            Console.SetCursorPosition(player.PositionLeft, player.PositionTop);
             DrawPlayer();
-            Console.SetCursorPosition(_player.PositionLeft, _player.PositionTop);
-            SetDefaultColors();
-        }
+            Console.SetCursorPosition(player.PositionLeft, player.PositionTop);
 
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+        }
         public void DrawPlayer()
         {
-            Console.ForegroundColor = _player.ColorForeground;
-            Console.BackgroundColor = _player.ColorBackground;
-            Console.Write(_player.Symbol);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.DarkCyan;
+            Console.Write('@');
         }
 
         public void DrawRoute()
         {
-            SetDefaultColors();
-            Console.Write(' ');
-        }
-
-        private void SetDefaultColors()
-        {
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Red;
+            Console.Write(' ');
         }
     }
 }
