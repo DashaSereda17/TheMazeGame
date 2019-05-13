@@ -10,6 +10,8 @@
         Key,
         Trap,
         DeadlyTrap,
-        Portal
+        Portal,
+        Prize,
+        Crystal
     }
 }

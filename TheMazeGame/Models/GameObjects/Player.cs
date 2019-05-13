@@ -11,6 +11,7 @@ namespace TheMazeGame.Models.GameObjects
     public class Player : GameObject, IGameSerialization
     {
         public const int MAX_LIFE_POINTS = 3;
+        public const int MAX_STEP_PER_TIME = 2;
 
         [DataMember]
         public int CountLifePoints { get; private set; } = MAX_LIFE_POINTS;
@@ -24,22 +25,32 @@ namespace TheMazeGame.Models.GameObjects
         public string PlayerName { get; set; }
         [DataMember]
         public DateTime StarTime { get; set; }
+        [DataMember]
+        public int StepsPerTime { get; set; }
+        [DataMember]
+        public int CountCrystals { get; set; }
+        [DataMember]
+        public int CountGamePoints { get; set; }
 
         public Player()
         {
             CountSteps = 0;
             CountKeys = 0;
             CountCoins = 0;
+            CountCrystals = 0;
+            CountGamePoints = 0;
+
             PositionTop = 0;
             PositionLeft = 0;
             ColorForeground = ConsoleColor.White;
             ColorBackground = ConsoleColor.Blue;
             Symbol = '@';
+            StepsPerTime = 1;
         }
 
-        public void IncreaseLifePoints()
+        public void IncreaseStepPerTime()
         {
-            CountLifePoints = CountLifePoints + 1 <= MAX_LIFE_POINTS ? ++CountLifePoints : CountLifePoints;
+            StepsPerTime = StepsPerTime + 1 <= MAX_STEP_PER_TIME ? ++StepsPerTime : StepsPerTime;
         }
 
         public void DecreaseLifePoints()
@@ -52,14 +63,21 @@ namespace TheMazeGame.Models.GameObjects
             CountSteps++;
         }
 
+        public void IncreaseGamePoints(int value)
+        {
+            CountGamePoints += value;
+        }
+
         public void IncreaseKeys()
         {
             CountKeys++;
+            IncreaseGamePoints(Configuration.KEY_VALUE);
         }
 
         public void IncreaseCoins()
         {
             CountCoins++;
+            IncreaseGamePoints(Configuration.COIN_VALUE);
         }
 
         public void Save()
@@ -119,6 +137,12 @@ namespace TheMazeGame.Models.GameObjects
         {
             PositionTop = top;
             PositionLeft = left;
+        }
+
+        public void IncreaseCrystals()
+        {
+            CountCrystals++;
+            IncreaseGamePoints(Configuration.CRYSTAL_VALUE);
         }
     }
 }

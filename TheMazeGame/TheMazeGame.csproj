@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -51,6 +54,7 @@
     <Compile Include="Interfaces\IGameSerialization.cs" />
     <Compile Include="Models\Configuration.cs" />
     <Compile Include="Models\Drawer.cs" />
+    <Compile Include="Models\Game.cs" />
     <Compile Include="Models\GameField.cs" />
     <Compile Include="Models\GameObjects\Cell.cs" />
     <Compile Include="Models\GameObjects\GameObject.cs" />
@@ -61,6 +65,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="Resources\GameField.json" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
