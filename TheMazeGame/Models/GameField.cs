@@ -491,7 +491,7 @@ namespace TheMazeGame.Models
                 ColorForeground = ConsoleColor.DarkRed,
                 FieldType = FieldTypes.DeadlyTrap,
                 IsActive = true,
-                Symbol = 'x'
+                Symbol = 'X'
             };
 
             return cell;

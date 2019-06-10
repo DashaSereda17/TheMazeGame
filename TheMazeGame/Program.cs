@@ -1,7 +1,7 @@
 ﻿using System;
 using TheMazeGame.Models;
 
-namespace TheMaze
+namespace TheMazeGame
 {
     class Program
     {
