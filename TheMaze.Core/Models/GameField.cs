@@ -609,7 +609,7 @@ namespace TheMaze.Core.Models
                 case FieldTypes.ClosedDoor:
                     gameObject.ColorForeground = CellColor.ClosedDoorForeground;
                     gameObject.ColorBackground = CellColor.ClosedDoorBackground;
-                    gameObject.Symbol = 'D';
+                    gameObject.Symbol = '#';
                     break;
                 case FieldTypes.Key:
                     gameObject.ColorForeground = CellColor.KeyForeground;
@@ -620,7 +620,7 @@ namespace TheMaze.Core.Models
                 case FieldTypes.DeadlyTrap:
                     gameObject.ColorForeground = CellColor.DeadlyTrapForeground;
                     gameObject.ColorBackground = CellColor.DeadlyTrapBackground;
-                    gameObject.Symbol = 'X';
+                    gameObject.Symbol = 'x';
                     break;
                 case FieldTypes.Portal:
                     gameObject.ColorForeground = CellColor.PortalForeground;

@@ -6,6 +6,7 @@ using TheMaze.Core.Models;
 using TheMaze.Core.Models.GameObjects;
 using TheMaze.Core.TextHelpers;
 using TheMaze.WinForms.Models;
+using TheMaze.WinForms.Services;
 
 namespace TheMaze.WinForms
 {
@@ -15,11 +16,12 @@ namespace TheMaze.WinForms
         private Player player;
         private GameField gameField;
         private readonly GameInfo gameInfo;
+        private DateTime startTime;
 
         public GameFieldView()
         {
             InitializeComponent();
-            gameInfo = new GameInfo();
+            gameInfo = new GameInfo();            
         }
 
         public void SetDrawer(WinDrawer drawer)
@@ -60,6 +62,7 @@ namespace TheMaze.WinForms
             }
 
             dgGame.CurrentCell = dgGame.Rows[player.PositionTop].Cells[player.PositionLeft];
+            startTime = DateTime.Now;
         }
 
         private void dgGame_KeyDown(object sender, KeyEventArgs e)
@@ -77,12 +80,14 @@ namespace TheMaze.WinForms
             switch (stepResult.TypeFinishGame)
             {
                 case TypeFinishGame.Won:
+                    new SoundService().PlayWinSound();
                     game.Text = "Congratulation!";
                     game.SetInformationText(stepResult.Text);
                     Close();
                     game.Show();
                     break;
                 case TypeFinishGame.Lost:
+                    new SoundService().PlayLoseSound();
                     game.Text = "You have lost";
                     game.SetInformationText(stepResult.Text);
                     player.SetPosition(0, 0);
@@ -90,8 +95,10 @@ namespace TheMaze.WinForms
                     game.Show();
                     break;
                 case TypeFinishGame.Exit:
+                    new SoundService().PlayLoseSound();
                     game.Text = "Bye! See you later";
                     game.SetInformationText(stepResult.Text);
+                    Close();
                     game.Show();
                     break;
             }
@@ -104,17 +111,24 @@ namespace TheMaze.WinForms
             {
                 case FieldTypes.OpenedDoor:
                     if (player.CountGamePoints < Configuration.GAMEPOINTS_TO_EXIT
-                        || player.CountSteps > Configuration.STEPS_TO_CLOSE_DOOR)
+                        || player.CountSteps > Configuration.STEPS_TO_CLOSE_DOOR
+                        || (DateTime.Now - player.StarTime).TotalSeconds > Configuration.TIME_TO_CLOSE_DOOR)
                     {
                         result = false;
+                        new SoundService().PlayClosedSound();
                     }
 
                     break;
                 case FieldTypes.Wall:
                     result = false;
+                    new SoundService().PlayClosedSound();
                     break;
-                case FieldTypes.ClosedDoor:
+                case FieldTypes.ClosedDoor:                    
                     result = player.CountKeys > 0;
+                    if (!result)
+                    {
+                        new SoundService().PlayClosedSound();
+                    }
                     break;
                 case FieldTypes.Coin:
                     if (gameField.Cells[nextRowPosition, nextColumnPosition].IsActive)
@@ -123,6 +137,7 @@ namespace TheMaze.WinForms
                         gameField.Cells[nextRowPosition, nextColumnPosition].IsActive = false;
                         tbxCoins.Text = player.CountCoins.ToString();
                         tbxTotalGamePoints.Text = player.CountGamePoints.ToString();
+                        new SoundService().PlayItemSound();
                     }
 
                     break;
@@ -133,6 +148,7 @@ namespace TheMaze.WinForms
                         gameField.Cells[nextRowPosition, nextColumnPosition].IsActive = false;
                         tbxKeys.Text = player.CountKeys.ToString();
                         tbxTotalGamePoints.Text = player.CountGamePoints.ToString();
+                        new SoundService().PlayKeySound();
                     }
 
                     break;
@@ -142,6 +158,7 @@ namespace TheMaze.WinForms
                         player.DecreaseLifePoints();
                         gameField.Cells[nextRowPosition, nextColumnPosition].IsActive = false;
                         tbxLifePoints.Text = player.CountLifePoints.ToString();
+                        new SoundService().PlayTrapSound();
                     }
 
                     break;
@@ -155,6 +172,7 @@ namespace TheMaze.WinForms
 
                         gameField.Cells[nextRowPosition, nextColumnPosition].IsActive = false;
                         tbxLifePoints.Text = player.CountLifePoints.ToString();
+                        new SoundService().PlayTrapSound();
                     }
 
                     break;
@@ -164,6 +182,7 @@ namespace TheMaze.WinForms
                         gameField.Cells[nextRowPosition, nextColumnPosition].IsActive = false;
                         player.IncreaseStepPerTime();
                         player.IncreaseGamePoints(Configuration.PRIZE_VALUE);
+                        new SoundService().PlayItemSound();
                     }
 
                     break;
@@ -174,6 +193,7 @@ namespace TheMaze.WinForms
                         player.IncreaseCrystals();
                         tbxCrystals.Text = player.CountCrystals.ToString();
                         tbxTotalGamePoints.Text = player.CountGamePoints.ToString();
+                        new SoundService().PlayItemSound();
                     }
 
                     break;
@@ -350,6 +370,7 @@ namespace TheMaze.WinForms
                 else if (isNextStepDone && nextPointType == FieldTypes.Portal
                                         && gameField.Cells[player.PositionTop, player.PositionLeft].IsActive)
                 {
+                    new SoundService().PlayItemSound();
                     gameField.Cells[player.PositionTop, player.PositionLeft].IsActive = false;
                     winDrawer.DrawRoute(player.PositionTop, player.PositionLeft);
                     //player.IncreaseGamePoints(Configuration.PORTAL_VALUE);

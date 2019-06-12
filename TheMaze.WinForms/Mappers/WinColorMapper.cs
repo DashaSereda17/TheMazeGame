@@ -17,19 +17,19 @@ namespace TheMaze.WinForms.Mappers
                     color = Color.Black;
                     break;
                 case CellColor.CoinBackground:
-                    color = Color.White;
+                    color = Color.Black;
                     break;
                 case CellColor.CoinForeground:
-                    color = Color.Orange;
+                    color = Color.Cyan;
                     break;
                 case CellColor.ClosedDoorBackground:
-                    color = Color.Cyan;
+                    color = Color.DarkGray;
                     break;
                 case CellColor.ClosedDoorForeground:
                     color = Color.Black;
                     break;
                 case CellColor.DeadlyTrapBackground:
-                    color = Color.White;
+                    color = Color.Black;
                     break;
                 case CellColor.DeadlyTrapForeground:
                     color = Color.Red;
@@ -41,10 +41,10 @@ namespace TheMaze.WinForms.Mappers
                     color = Color.White;
                     break;
                 case CellColor.KeyBackground:
-                    color = Color.White;
+                    color = Color.Black;
                     break;
                 case CellColor.KeyForeground:
-                    color = Color.Cyan;
+                    color = Color.Blue;
                     break;
                 case CellColor.CrystalBackground:
                     color = Color.Blue;
@@ -53,22 +53,22 @@ namespace TheMaze.WinForms.Mappers
                     color = Color.White;
                     break;
                 case CellColor.TrapBackground:
-                    color = Color.White;
+                    color = Color.Black;
                     break;
                 case CellColor.TrapForeground:
-                    color = Color.DarkRed;
+                    color = Color.Red;
                     break;
                 case CellColor.PortalBackground:
-                    color = Color.Magenta;
+                    color = Color.Blue;
                     break;
                 case CellColor.PortalForeground:
                     color = Color.White;
                     break;
                 case CellColor.PrizeBackground:
-                    color = Color.White;
+                    color = Color.Green;
                     break;
                 case CellColor.PrizeForeground:
-                    color = Color.Green;
+                    color = Color.Black;
                     break;
                 case CellColor.PlayerBackground:
                     color = Color.White;

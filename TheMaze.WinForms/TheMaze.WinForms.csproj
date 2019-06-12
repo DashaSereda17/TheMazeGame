@@ -65,6 +65,7 @@
       <DependentUpon>GameMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="Mappers\WinColorMapper.cs" />
+    <Compile Include="Mappers\WinImageMapper.cs" />
     <Compile Include="Models\StepResult.cs" />
     <Compile Include="PlayerEditor.cs">
       <SubType>Form</SubType>
@@ -80,6 +81,7 @@
     <Compile Include="GameInformation.Designer.cs">
       <DependentUpon>GameInformation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Services\SoundService.cs" />
     <Compile Include="WinDrawer.cs" />
     <EmbeddedResource Include="GameFieldView.resx">
       <DependentUpon>GameFieldView.cs</DependentUpon>
@@ -123,6 +125,27 @@
       <Project>{a286a531-838a-410b-8a15-7b0157f73190}</Project>
       <Name>TheMaze.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\Audio\bensound-summer.wav" />
+    <Content Include="Resources\Audio\closed.wav" />
+    <Content Include="Resources\Audio\item.wav" />
+    <Content Include="Resources\Audio\key.wav" />
+    <Content Include="Resources\Audio\lose.wav" />
+    <Content Include="Resources\Audio\trap.wav" />
+    <Content Include="Resources\Audio\win.wav" />
+    <Content Include="Resources\Images\closeddoor.png" />
+    <Content Include="Resources\Images\coin.png" />
+    <Content Include="Resources\Images\crystal.png" />
+    <Content Include="Resources\Images\key.png" />
+    <Content Include="Resources\Images\opendoor.png" />
+    <Content Include="Resources\Images\player.png" />
+    <Content Include="Resources\Images\portal.png" />
+    <Content Include="Resources\Images\prize.png" />
+    <Content Include="Resources\Images\route.png" />
+    <Content Include="Resources\Images\trap.png" />
+    <Content Include="Resources\Images\wall.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

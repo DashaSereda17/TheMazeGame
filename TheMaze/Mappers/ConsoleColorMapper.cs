@@ -7,7 +7,7 @@ namespace TheMaze.Mappers
     {
         public static ConsoleColor MapToConsoleColor(CellColor cellColor)
         {
-            ConsoleColor color = ConsoleColor.Red;
+            ConsoleColor color = ConsoleColor.Black;
             switch (cellColor)
             {
                 case CellColor.WallBackground:
@@ -17,13 +17,13 @@ namespace TheMaze.Mappers
                     color = ConsoleColor.Black;
                     break;
                 case CellColor.CoinBackground:
-                    color = ConsoleColor.Red;
+                    color = ConsoleColor.Black;
                     break;
                 case CellColor.CoinForeground:
-                    color = ConsoleColor.DarkYellow;
+                    color = ConsoleColor.Cyan;
                     break;
                 case CellColor.ClosedDoorBackground:
-                    color = ConsoleColor.Cyan;
+                    color = ConsoleColor.DarkGray;
                     break;
                 case CellColor.ClosedDoorForeground:
                     color = ConsoleColor.Black;
@@ -32,7 +32,7 @@ namespace TheMaze.Mappers
                     color = ConsoleColor.Black;
                     break;
                 case CellColor.DeadlyTrapForeground:
-                    color = ConsoleColor.DarkRed;
+                    color = ConsoleColor.Red;
                     break;
                 case CellColor.OpenDoorBackground:
                     color = ConsoleColor.Green;
@@ -41,10 +41,10 @@ namespace TheMaze.Mappers
                     color = ConsoleColor.White;
                     break;
                 case CellColor.KeyBackground:
-                    color = ConsoleColor.Red;
+                    color = ConsoleColor.Black;
                     break;
                 case CellColor.KeyForeground:
-                    color = ConsoleColor.Cyan;
+                    color = ConsoleColor.Blue;
                     break;
                 case CellColor.CrystalBackground:
                     color = ConsoleColor.Blue;
@@ -53,13 +53,13 @@ namespace TheMaze.Mappers
                     color = ConsoleColor.White;
                     break;
                 case CellColor.TrapBackground:
-                    color = ConsoleColor.Red;
+                    color = ConsoleColor.Black;
                     break;
                 case CellColor.TrapForeground:
-                    color = ConsoleColor.DarkRed;
+                    color = ConsoleColor.Red;
                     break;
                 case CellColor.PortalBackground:
-                    color = ConsoleColor.Magenta;
+                    color = ConsoleColor.Blue;
                     break;
                 case CellColor.PortalForeground:
                     color = ConsoleColor.White;
@@ -68,7 +68,7 @@ namespace TheMaze.Mappers
                     color = ConsoleColor.Green;
                     break;
                 case CellColor.PrizeForeground:
-                    color = ConsoleColor.White;
+                    color = ConsoleColor.Black;
                     break;
                 case CellColor.PlayerBackground:
                     color = ConsoleColor.White;
